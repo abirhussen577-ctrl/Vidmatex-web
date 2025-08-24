@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VidMateX Downloader</title>
+  <style>
+    :root { --bg:#f5f5f5; --card:#ffffff; --text:#222; --brand:#28a745; --brand-d:#218838; --border:#ddd; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 40px 16px; background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif; color: var(--text);
+      display: grid; place-items: center; min-height: 100dvh;
+    }
+    .card {
+      width: 100%; max-width: 520px; background: var(--card);
+      border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    p.muted { margin: 0 0 16px; color:#666; font-size:14px; }
+    form { display: grid; gap: 12px; }
+    .row { display: grid; gap: 8px; }
+    label { font-size:14px; color:#444; }
+    input[type="url"]{
+      width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+      border-radius: 10px; font-size: 15px; outline: none;
+    }
+    input[type="url"]:focus{ border-color:#bbb; }
+    button{
+      appearance: none; border: 0; border-radius: 10px;
+      padding: 12px 16px; font-size: 15px; font-weight: 600;
+      background: var(--brand); color: #fff; cursor: pointer;
+      transition: transform .03s ease, background .15s ease;
+    }
+    button:active{ transform: translateY(1px); }
+    button:hover{ background: var(--brand-d); }
+    .note { margin-top:10px; font-size:12px; color:#777; text-align:center; }
+    .footer { margin-top: 14px; text-align:center; font-size:12px; color:#888; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ভিডিও ডাউনলোডার</h1>
+    <p class="muted">লিংক পেস্ট করে <b>ডাউনলোড</b> চাপুন।</p>
+
+    <!-- Flask ব্যাকএন্ডে /download রুটে পোস্ট করবে -->
+    <form id="downloadForm" action="/download" method="POST">
+      <div class="row">
+        <label for="url">ভিডিও লিংক</label>
+        <input id="url" name="url" type="url" placeholder="https://…" required />
+      </div>
+      <button id="submitBtn" type="submit">ডাউনলোড</button>
+      <div class="note">নোট: আসল ডাউনলোড কাজ করতে ব্যাকএন্ড (Flask + yt-dlp) চালু থাকতে হবে।</div>
+    </form>
+
+    <div class="footer">VidMateX ready</div>
+  </div>
+
+  <script>
+    // খুব হালকা UX: সাবমিট হলে বাটনে 'Preparing…'
+    const form = document.getElementById('downloadForm');
+    const btn  = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', () => {
+      btn.disabled = true;
+      const old = btn.textContent;
+      btn.textContent = 'Preparing…';
+      // সাধারণ ফর্ম সাবমিট—পেজ সার্ভার থেকে ফাইল পাঠালেই ব্রাউজার ডাউনলোড করবে।
+      // যদি কোনো কারণে ডাউনলোড না হয়, 6 সেকেন্ড পরে বাটন আবার সক্রিয়।
+      setTimeout(() => { btn.disabled = false; btn.textContent = old; }, 6000);
+      console.log('VidMateX ready!');
+    });
+  </script>
+</body>
+</html>
