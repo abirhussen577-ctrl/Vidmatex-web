@@ -7,6 +7,9 @@ app = Flask(__name__)
 # ফোনের Downloads ফোল্ডার
 DOWNLOAD_FOLDER = os.path.expanduser('~/storage/downloads')
 
+# cookies.txt এর পাথ (app.py এর সাথেই রাখো)
+COOKIES_FILE = os.path.join(os.path.dirname(__file__), "cookies.txt")
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -25,7 +28,9 @@ def download():
         'outtmpl': outtmpl,
         'merge_output_format': 'mp4',
         'noplaylist': True,
-        'restrictfilenames': True
+        'restrictfilenames': True,
+        # এখানে কুকিজ ফাইল যুক্ত করা হলো
+        'cookiefile': COOKIES_FILE
     }
 
     try:
@@ -38,4 +43,3 @@ def download():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
